@@ -8,6 +8,10 @@ const On: RGB = { red: 253, green: 216, blue: 53 };
 const BatteryFull: RGB = { red: 96, green: 176, blue: 62 }
 const BatteryEmpty: RGB = { red: 179, green: 45, blue: 25 }
 
+//----Möglichkeit, im Screensaver zwischen Accu-Weather Forcast oder selbstdefinierten Werten zu wählen---------------------------------
+var weatherForecast = true; //true = WheatherForecast 5 Days --- false = Config --> firstScreensaverEntity - fourthScreensaverEntity ...
+//--------------------------------------------------------------------------------------------------------------------------------------
+
 var Wohnen: PageEntities =
 {
     "type": "cardEntities",
@@ -638,11 +642,24 @@ function HandleScreensaverUpdate(): void {
             "weatherUpdate,?" + GetAccuWeatherIcon(parseInt(icon)) + "?"
             + temperature + " " + config.temperatureUnit + "?"
 
-        payloadString += GetScreenSaverEntityString(config.firstScreensaverEntity);
-        payloadString += GetScreenSaverEntityString(config.secondScreensaverEntity);
-        payloadString += GetScreenSaverEntityString(config.thirdScreensaverEntity);
-        payloadString += GetScreenSaverEntityString(config.fourthScreensaverEntity);
-
+/*-------------------------------------------------------------------------------------------------------------------------------------*/
+        if (weatherForecast == true) {
+            // Accu-Weather Forecast Tag 2 - Tag 5 -- Wenn weatherForecast = true
+            for (let i = 2; i < 6; i++) {
+                let TempMax = getState("accuweather.0.Summary.TempMax_d" + i).val;
+                let DayOfWeek = getState("accuweather.0.Summary.DayOfWeek_d" + i).val;
+                let WeatherIcon = GetAccuWeatherIcon(getState("accuweather.0.Summary.WeatherIcon_d" + i).val);
+                payloadString += DayOfWeek + "?" + WeatherIcon + "?" + TempMax + " °C?";
+            }
+        } 
+        else {
+            //In Config definierte Zustände wenn weatherForecast = false
+            payloadString += GetScreenSaverEntityString(config.firstScreensaverEntity);
+            payloadString += GetScreenSaverEntityString(config.secondScreensaverEntity);
+            payloadString += GetScreenSaverEntityString(config.thirdScreensaverEntity);
+            payloadString += GetScreenSaverEntityString(config.fourthScreensaverEntity);
+        }
+/*-------------------------------------------------------------------------------------------------------------------------------------*/
         SendToPanel(<Payload>{ payload: payloadString });
     }
 }
