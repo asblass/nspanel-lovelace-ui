@@ -425,7 +425,7 @@ function GenerateThermoPage(page: PageThermo): Payload[] {
         let name = o.common.name.de
         let currentTemp = 0;
         if (existsState(id + ".ACTUAL"))
-            currentTemp = parseInt(getState(id + ".ACTUAL").val) * 10;
+            currentTemp = (Math.round(parseFloat(getState(id + ".ACTUAL").val) * 10) / 10) * 10;
 
         let destTemp = 0;
         if (existsState(id + ".SET")) {
