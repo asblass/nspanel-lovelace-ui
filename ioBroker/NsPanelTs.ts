@@ -380,7 +380,7 @@ on({id: [popupNotifyHeading, popupNotifyText], change: "ne"}, async function (ob
 });
 
 var subscriptions: any = {};
-var screensaverEnabled : boolean = false;
+var screensaverEnabled : boolean = true;
 var pageId = 0;
 
 //Neu für Subpages
